@@ -11,7 +11,7 @@ public class Main {
     private static String filename;
     private static String dir;
 
-    public static void main(String[] args) throws MalformedURLException {
+    public static void main(String[] args) throws IOException {
         if(args.length <= 0) {
             System.out.println("SnipDL " + VERSION);
             System.out.println("Available Arguments:");
@@ -46,29 +46,25 @@ public class Main {
             System.out.println("\nStarting download from: " + uri);
             System.out.println("Saving to: " + new File(filename).getAbsolutePath());
 
-            try (BufferedInputStream in = new BufferedInputStream(openStream(uri));
-                 FileOutputStream fileOutputStream = new FileOutputStream(filename)) {
+            HttpURLConnection httpcon = (HttpURLConnection) uri.openConnection();
+            httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
+
+            try (BufferedInputStream in = new BufferedInputStream(httpcon.getInputStream());
+                FileOutputStream fileOutputStream = new FileOutputStream(filename)) {
+
                 byte[] dataBuffer = new byte[1024];
                 int bytesRead;
+                int total = httpcon.getContentLength();
+                int downloaded = 0;
                 while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
                     fileOutputStream.write(dataBuffer, 0, bytesRead);
+                    downloaded += bytesRead;
+                    System.out.println(downloaded + "/" + total);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-        }
-    }
-
-    private static InputStream openStream(URL url) {
-        try {
-            HttpURLConnection httpcon = (HttpURLConnection) url.openConnection();
-            httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
-
-            return httpcon.getInputStream();
-        } catch (IOException e) {
-            String error = e.toString();
-            throw new RuntimeException(e);
+            System.out.println("Done.");
         }
     }
 

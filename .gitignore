@@ -1,0 +1,10 @@
+/bin/
+/.classpath
+/.project
+/.idea/
+/out/
+/.gradle/
+/build/
+/release/*
+SnipDL.iml
+settings.gradle

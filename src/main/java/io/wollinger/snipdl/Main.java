@@ -59,7 +59,9 @@ public class Main {
                 while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
                     fileOutputStream.write(dataBuffer, 0, bytesRead);
                     downloaded += bytesRead;
-                    System.out.println(downloaded + "/" + total);
+
+                    final int currentProgress = (int) ((((double)downloaded) / ((double)total)) * 100d);
+                    System.out.println(currentProgress + "%");
                 }
             } catch (IOException e) {
                 e.printStackTrace();

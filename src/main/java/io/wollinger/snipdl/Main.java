@@ -14,6 +14,7 @@ public class Main {
     private static String url;
     private static String filename;
     private static String dir;
+    private static boolean gui;
 
     public static void main(String[] args) throws IOException, UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         if(args.length <= 0) {
@@ -28,15 +29,10 @@ public class Main {
             int index = 0;
             for(String part : args) {
                 switch(part) {
-                    case "-url":
-                        url = checkArg(index, args);
-                        break;
-                    case "-filename":
-                        filename = checkArg(index, args);
-                        break;
-                    case "-dir":
-                        dir = checkArg(index, args);
-                        break;
+                    case "-url": url = checkArg(index, args);break;
+                    case "-filename": filename = checkArg(index, args);break;
+                    case "-dir": dir = checkArg(index, args);break;
+                    case "-gui": gui = true; break;
                 }
                 index++;
             }
@@ -45,7 +41,7 @@ public class Main {
     }
 
     public static String checkArg(int index, String[] args) {
-        String arg = "";
+        String arg = null;
         if(args.length > index + 1) arg = args[index + 1];
         else notEnoughArguments(args[index]);
         return arg;
@@ -53,17 +49,19 @@ public class Main {
 
     public static void run() {
         JFrame frame = new JFrame();
-        frame.setSize(512, 128);
         JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
-        progressBar.setToolTipText("test");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-        frame.setTitle("Starting...");
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        int width = gd.getDisplayMode().getWidth();
-        int height = gd.getDisplayMode().getHeight();
-        frame.setLocation(width / 2 - frame.getWidth() / 2, height / 2 - frame.getHeight() / 2);
-        frame.add(progressBar);
+        if(gui) {
+            frame.setSize(512, 128);
+            progressBar.setToolTipText("test");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setVisible(true);
+            frame.setTitle("Starting...");
+            GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+            int width = gd.getDisplayMode().getWidth();
+            int height = gd.getDisplayMode().getHeight();
+            frame.setLocation(width / 2 - frame.getWidth() / 2, height / 2 - frame.getHeight() / 2);
+            frame.add(progressBar);
+        }
 
         final int[] secondsRemaining = {6};
 
@@ -92,14 +90,23 @@ public class Main {
         if(filename == null)
             filename = new File(uri.getFile()).getName();
 
-        System.out.println("\nStarting download from: " + uri);
-        System.out.println("Saving to: " + new File(filename).getAbsolutePath());
-
         HttpURLConnection httpcon = (HttpURLConnection) uri.openConnection();
         httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");
 
+        String path = filename;
+        if(dir != null && !dir.isEmpty()) {
+            new File(dir).mkdirs();
+            path = dir + "//" + filename;
+        }
+
+
+        path = new File(path).getAbsolutePath();
+
+        System.out.println("\nStarting download from: " + uri);
+        System.out.println("Saving to: " + path);
+
         try (BufferedInputStream in = new BufferedInputStream(httpcon.getInputStream());
-             FileOutputStream fileOutputStream = new FileOutputStream(filename)) {
+             FileOutputStream fileOutputStream = new FileOutputStream(path)) {
             frame.setTitle("Downloading...");
             byte[] dataBuffer = new byte[1024];
             int bytesRead;
@@ -110,7 +117,7 @@ public class Main {
                 downloaded += bytesRead;
 
                 final int currentProgress = (int) ((((double)downloaded) / ((double)total)) * 100d);
-                progressBar.setValue(currentProgress);
+                if(gui) progressBar.setValue(currentProgress);
                 System.out.println("Status: " + currentProgress + "%");
             }
         } catch (IOException e) {

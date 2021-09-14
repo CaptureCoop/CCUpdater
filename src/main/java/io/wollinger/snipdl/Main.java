@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -23,22 +22,20 @@ public class Main {
             System.out.println("-url https://server.com/file.zip");
             System.out.println("-filename newName.zip");
             System.out.println("-dir C:/place/to/save/");
+            System.out.println("-gui");
         } else {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             int index = 0;
             for(String part : args) {
                 switch(part) {
                     case "-url":
-                        if(args.length > index + 1) url = args[index + 1];
-                        else notEnoughArguments(part);
+                        url = checkArg(index, args);
                         break;
                     case "-filename":
-                        if(args.length > index + 1) filename = args[index + 1];
-                        else notEnoughArguments(part);
+                        filename = checkArg(index, args);
                         break;
                     case "-dir":
-                        if(args.length > index + 1) dir = args[index + 1];
-                        else notEnoughArguments(part);
+                        dir = checkArg(index, args);
                         break;
                 }
                 index++;
@@ -47,7 +44,14 @@ public class Main {
         }
     }
 
-    public static void run() throws IOException {
+    public static String checkArg(int index, String[] args) {
+        String arg = "";
+        if(args.length > index + 1) arg = args[index + 1];
+        else notEnoughArguments(args[index]);
+        return arg;
+    }
+
+    public static void run() {
         JFrame frame = new JFrame();
         frame.setSize(512, 128);
         JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);

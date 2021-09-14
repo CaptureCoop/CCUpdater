@@ -152,6 +152,7 @@ public class Main {
             while ((ze = zis.getNextEntry()) != null) {
                 Path filePath = Paths.get(extractTo).resolve(ze.getName());
                 if(!ze.isDirectory()) {
+                    filePath.toFile().delete();
                     try (FileOutputStream fos = new FileOutputStream(filePath.toFile());
                          BufferedOutputStream bos = new BufferedOutputStream(fos, buffer.length)) {
                         int len;

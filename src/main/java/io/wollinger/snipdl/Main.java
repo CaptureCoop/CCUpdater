@@ -130,14 +130,20 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        if(extract) {
+            //TODO: Extract
+        }
+
         if(exec != null && !exec.isEmpty()) {
-            if(path.toLowerCase().endsWith(".jar")) {
-                System.out.println("Launching jar: " + path);
-                new ProcessBuilder("java", "-jar", path).start();
+            String toExecute = dir + "//" + exec;
+            if(exec.toLowerCase().endsWith(".jar")) {
+                System.out.println("Launching jar: " + toExecute);
+                new ProcessBuilder("java", "-jar", toExecute).start();
 
             } else {
-                System.out.println("Launching: " + path);
-                new ProcessBuilder(path).start();
+                System.out.println("Launching: " + toExecute);
+                new ProcessBuilder(toExecute).start();
             }
         }
         frame.dispose();

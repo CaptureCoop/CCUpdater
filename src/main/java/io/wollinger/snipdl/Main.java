@@ -15,8 +15,10 @@ public class Main {
     private static String filename;
     private static String dir;
     private static boolean gui;
+    private static String exec;
+    private static boolean extract;
 
-    public static void main(String[] args) throws IOException, UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         if(args.length <= 0) {
             System.out.println("SnipDL " + VERSION);
             System.out.println("Available Arguments:");
@@ -24,15 +26,19 @@ public class Main {
             System.out.println("-filename newName.zip");
             System.out.println("-dir C:/place/to/save/");
             System.out.println("-gui");
+            System.out.println("-exec");
+            System.out.println("-extract");
         } else {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             int index = 0;
             for(String part : args) {
                 switch(part) {
-                    case "-url": url = checkArg(index, args);break;
-                    case "-filename": filename = checkArg(index, args);break;
-                    case "-dir": dir = checkArg(index, args);break;
+                    case "-url": url = checkArg(index, args); break;
+                    case "-filename": filename = checkArg(index, args); break;
+                    case "-dir": dir = checkArg(index, args); break;
                     case "-gui": gui = true; break;
+                    case "-exec": exec = checkArg(index, args); break;
+                    case "-extract": extract = true; break;
                 }
                 index++;
             }
@@ -48,6 +54,7 @@ public class Main {
     }
 
     public static void run() {
+        System.out.println("SnipDL " + VERSION);
         JFrame frame = new JFrame();
         JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
         if(gui) {
@@ -122,6 +129,16 @@ public class Main {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        if(exec != null && !exec.isEmpty()) {
+            if(path.toLowerCase().endsWith(".jar")) {
+                System.out.println("Launching jar: " + path);
+                new ProcessBuilder("java", "-jar", path).start();
+
+            } else {
+                System.out.println("Launching: " + path);
+                new ProcessBuilder(path).start();
+            }
         }
         frame.dispose();
     }

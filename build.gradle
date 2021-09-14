@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'io.wollinger'
+group 'net.capturecoop'
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -26,10 +26,9 @@ dependencies {
 jar {
     manifest {
         attributes(
-                'Main-Class': 'io.wollinger.snipdl.Main'
+                'Main-Class': 'net.capturecoop.snipupdater.Main'
         )
     }
-
 }
 
 test {

@@ -16,7 +16,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class Main {
-    private static final String VERSION = "0.0.1";
     private static String url;
     private static String filename;
     private static String dir;
@@ -27,7 +26,7 @@ public class Main {
 
     public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         if(args.length <= 0) {
-            System.out.println("SnipDL " + VERSION);
+            System.out.println("SnipDL");
             System.out.println("Available Arguments:");
             System.out.println("-url https://server.com/file.zip");
             System.out.println("-filename newName.zip");
@@ -63,7 +62,7 @@ public class Main {
     }
 
     public static void run() {
-        System.out.println("SnipDL " + VERSION);
+        System.out.println("SnipDL");
         JFrame frame = new JFrame();
         JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
         if(gui) {

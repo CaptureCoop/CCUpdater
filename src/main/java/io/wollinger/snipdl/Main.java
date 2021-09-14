@@ -137,6 +137,8 @@ public class Main {
 
         if(exec != null && !exec.isEmpty()) {
             String toExecute = dir + "//" + exec;
+            if(dir == null)
+                toExecute = exec;
             if(exec.toLowerCase().endsWith(".jar")) {
                 System.out.println("Launching jar: " + toExecute);
                 new ProcessBuilder("java", "-jar", toExecute).start();

@@ -4,10 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class Main {
     private static final String VERSION = "0.0.1";
@@ -17,6 +23,7 @@ public class Main {
     private static boolean gui;
     private static String exec;
     private static boolean extract;
+    private static boolean deleteFile;
 
     public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         if(args.length <= 0) {
@@ -28,6 +35,7 @@ public class Main {
             System.out.println("-gui");
             System.out.println("-exec");
             System.out.println("-extract");
+            System.out.println("-deleteFile");
         } else {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             int index = 0;
@@ -39,6 +47,7 @@ public class Main {
                     case "-gui": gui = true; break;
                     case "-exec": exec = checkArg(index, args); break;
                     case "-extract": extract = true; break;
+                    case "-deleteFile": deleteFile = true; break;
                 }
                 index++;
             }
@@ -83,7 +92,7 @@ public class Main {
                 executor.shutdown();
                 try {
                     executeDL(frame, progressBar);
-                } catch (IOException e) {
+                } catch (IOException | InterruptedException e) {
                     e.printStackTrace();
                 }
             }
@@ -91,7 +100,7 @@ public class Main {
         executor.scheduleAtFixedRate(helloRunnable, 0, 1, TimeUnit.SECONDS);
     }
 
-    public static void executeDL(JFrame frame, JProgressBar progressBar) throws IOException {
+    public static void executeDL(JFrame frame, JProgressBar progressBar) throws IOException, InterruptedException {
         URL uri = new URL(url);
 
         if(filename == null)
@@ -132,7 +141,32 @@ public class Main {
         }
 
         if(extract) {
-            //TODO: Extract
+            byte[] buffer = new byte[4096];
+            FileInputStream fis = new FileInputStream(path);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            ZipInputStream zis = new ZipInputStream(bis);
+            ZipEntry ze;
+
+            String extractTo = getCurrentFolder();
+            if(dir != null && !dir.isEmpty())
+                extractTo = extractTo + dir;
+            while ((ze = zis.getNextEntry()) != null) {
+                Path filePath = Paths.get(extractTo).resolve(ze.getName());
+                if(!ze.isDirectory()) {
+                    try (FileOutputStream fos = new FileOutputStream(filePath.toFile());
+                         BufferedOutputStream bos = new BufferedOutputStream(fos, buffer.length)) {
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            bos.write(buffer, 0, len);
+                        }
+                    }
+                } else {
+                    filePath.toFile().mkdirs();
+                }
+            }
+            fis.close();
+            bis.close();
+            zis.close();
         }
 
         if(exec != null && !exec.isEmpty()) {
@@ -145,10 +179,37 @@ public class Main {
 
             } else {
                 System.out.println("Launching: " + toExecute);
-                new ProcessBuilder(toExecute).start();
+                Process p = new ProcessBuilder(toExecute).start();
+                if(deleteFile) //We wait if deleteFile is true to avoid issues
+                    p.waitFor();
             }
         }
+
+        if(deleteFile) {
+            System.out.println("Deleting file: " + path);
+            new File(path).delete();
+        }
         frame.dispose();
+    }
+
+    public static String getCurrentFolder() {
+        String folderToUseString = null;
+        String jarFolder;
+        try {
+            folderToUseString = URLDecoder.decode(Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).toString(), "UTF-8");
+        } catch (UnsupportedEncodingException | URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        if(folderToUseString != null) {
+            File folderToUse = new File(folderToUseString);
+            if (folderToUse.getName().endsWith(".jar"))
+                jarFolder = folderToUseString.replace(folderToUse.getName(), "");
+            else
+                jarFolder = folderToUseString;
+            return jarFolder;
+        }
+        return null;
     }
 
     public static void notEnoughArguments(String arg) {

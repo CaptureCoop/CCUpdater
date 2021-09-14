@@ -1,4 +1,4 @@
-# SnipDL
+# SnipUpdater
 
 Lightweight tool used by SnipSniper to download updates
 

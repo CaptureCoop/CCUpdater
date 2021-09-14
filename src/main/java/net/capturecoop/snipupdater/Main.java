@@ -148,7 +148,7 @@ public class Main {
 
             String extractTo = getCurrentFolder();
             if(dir != null && !dir.isEmpty())
-                extractTo = extractTo + dir;
+                extractTo = dir;
             while ((ze = zis.getNextEntry()) != null) {
                 Path filePath = Paths.get(extractTo).resolve(ze.getName());
                 if(!ze.isDirectory()) {

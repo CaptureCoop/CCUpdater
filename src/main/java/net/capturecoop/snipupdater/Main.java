@@ -1,4 +1,4 @@
-package io.wollinger.snipdl;
+package net.capturecoop.snipupdater;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +26,7 @@ public class Main {
 
     public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         if(args.length <= 0) {
-            System.out.println("SnipDL");
+            System.out.println("SnipUpdater");
             System.out.println("Available Arguments:");
             System.out.println("-url https://server.com/file.zip");
             System.out.println("-filename newName.zip");
@@ -62,7 +62,7 @@ public class Main {
     }
 
     public static void run() {
-        System.out.println("SnipDL");
+        System.out.println("SnipUpdater");
         JFrame frame = new JFrame();
         JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
         if(gui) {

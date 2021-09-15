@@ -9,8 +9,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -82,10 +80,10 @@ public class Main {
     }
 
     public static void executeDL(JFrame frame, JProgressBar progressBar) throws IOException, InterruptedException {
-        URL uri = new URL(url);
+        URL uri = new URL(url + "?cache=" + System.currentTimeMillis());
 
         if(filename == null)
-            filename = new File(uri.getFile()).getName();
+            filename = new File(new URL(url).getFile()).getName();
 
         HttpURLConnection httpcon = (HttpURLConnection) uri.openConnection();
         httpcon.addRequestProperty("User-Agent", "Mozilla/4.0");

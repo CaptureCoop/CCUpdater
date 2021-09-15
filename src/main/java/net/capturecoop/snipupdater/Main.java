@@ -24,7 +24,7 @@ public class Main {
     private static boolean extract;
     private static boolean deleteFile;
 
-    public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, InterruptedException {
         if(args.length <= 0) {
             System.out.println("SnipUpdater");
             System.out.println("Available Arguments:");
@@ -32,7 +32,7 @@ public class Main {
             System.out.println("-filename newName.zip");
             System.out.println("-dir C:/place/to/save/");
             System.out.println("-gui");
-            System.out.println("-exec");
+            System.out.println("-exec file.jar");
             System.out.println("-extract");
             System.out.println("-deleteFile");
         } else {
@@ -61,13 +61,12 @@ public class Main {
         return arg;
     }
 
-    public static void run() {
+    public static void run() throws IOException, InterruptedException {
         System.out.println("SnipUpdater");
         JFrame frame = new JFrame();
         JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
         if(gui) {
             frame.setSize(512, 128);
-            progressBar.setToolTipText("test");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
             frame.setTitle("Starting...");
@@ -78,25 +77,8 @@ public class Main {
             frame.add(progressBar);
         }
 
-        final int[] secondsRemaining = {6};
-
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-
-        Runnable helloRunnable = () -> {
-            secondsRemaining[0]--;
-            String str = "Starting in " + secondsRemaining[0];
-            frame.setTitle(str);
-            System.out.println(str);
-            if(secondsRemaining[0] == 0) {
-                executor.shutdown();
-                try {
-                    executeDL(frame, progressBar);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        executor.scheduleAtFixedRate(helloRunnable, 0, 1, TimeUnit.SECONDS);
+        TimeUnit.SECONDS.sleep(1);
+        executeDL(frame, progressBar);
     }
 
     public static void executeDL(JFrame frame, JProgressBar progressBar) throws IOException, InterruptedException {
@@ -117,7 +99,7 @@ public class Main {
 
         path = new File(path).getAbsolutePath();
 
-        System.out.println("\nStarting download from: " + uri);
+        System.out.println("Starting download from: " + uri);
         System.out.println("Saving to: " + path);
 
         try (BufferedInputStream in = new BufferedInputStream(httpcon.getInputStream());
@@ -130,8 +112,8 @@ public class Main {
             while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
                 fileOutputStream.write(dataBuffer, 0, bytesRead);
                 downloaded += bytesRead;
-
                 final int currentProgress = (int) ((((double)downloaded) / ((double)total)) * 100d);
+                frame.setTitle("Downloading... (" + currentProgress + "%)");
                 if(gui) progressBar.setValue(currentProgress);
                 System.out.println("Status: " + currentProgress + "%");
             }

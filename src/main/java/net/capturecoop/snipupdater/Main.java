@@ -68,6 +68,7 @@ public class Main {
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
             frame.setTitle("Starting...");
+            frame.setIconImage(new ImageIcon(Main.class.getResource("/net/capturecoop/snipupdater/download.png")).getImage());
             GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
             int width = gd.getDisplayMode().getWidth();
             int height = gd.getDisplayMode().getHeight();

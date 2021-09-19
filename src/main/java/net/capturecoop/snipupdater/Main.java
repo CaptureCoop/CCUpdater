@@ -66,14 +66,14 @@ public class Main {
         if(gui) {
             frame.setSize(512, 128);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setVisible(true);
             frame.setTitle("Starting...");
-            frame.setIconImage(new ImageIcon(Main.class.getResource("/net/capturecoop/snipupdater/download.png")).getImage());
             GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
             int width = gd.getDisplayMode().getWidth();
             int height = gd.getDisplayMode().getHeight();
             frame.setLocation(width / 2 - frame.getWidth() / 2, height / 2 - frame.getHeight() / 2);
             frame.add(progressBar);
+            frame.setIconImage(new ImageIcon(Main.class.getResource("/net/capturecoop/snipupdater/download.png")).getImage());
+            frame.setVisible(true);
         }
 
         TimeUnit.SECONDS.sleep(1);

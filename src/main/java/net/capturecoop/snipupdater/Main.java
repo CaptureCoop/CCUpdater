@@ -161,8 +161,6 @@ public class Main {
             } else {
                 System.out.println("Launching: " + toExecute);
                 Process p = new ProcessBuilder(toExecute).start();
-                if(deleteFile) //We wait if deleteFile is true to avoid issues
-                    p.waitFor();
             }
         }
 

@@ -1,4 +1,4 @@
-package org.capturecoop.snipupdater;
+package org.capturecoop.ccupdater;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,7 +24,7 @@ public class Main {
 
     public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, InterruptedException {
         if(args.length <= 0) {
-            System.out.println("SnipUpdater");
+            System.out.println("CCUpdater");
             System.out.println("Available Arguments:");
             System.out.println("-url https://server.com/file.zip");
             System.out.println("-filename newName.zip");
@@ -49,7 +49,7 @@ public class Main {
                 index++;
             }
             run();
-        }
+        }d
     }
 
     public static String checkArg(int index, String[] args) {
@@ -60,7 +60,7 @@ public class Main {
     }
 
     public static void run() throws IOException, InterruptedException {
-        System.out.println("SnipUpdater");
+        System.out.println("CCUpdater");
         JFrame frame = new JFrame();
         JProgressBar progressBar = new JProgressBar(JProgressBar.HORIZONTAL, 0, 100);
         if(gui) {
@@ -72,7 +72,7 @@ public class Main {
             int height = gd.getDisplayMode().getHeight();
             frame.setLocation(width / 2 - frame.getWidth() / 2, height / 2 - frame.getHeight() / 2);
             frame.add(progressBar);
-            frame.setIconImage(new ImageIcon(Main.class.getResource("/org/capturecoop/snipupdater/download.png")).getImage());
+            frame.setIconImage(new ImageIcon(Main.class.getResource("/org/capturecoop/ccupdater/download.png")).getImage());
             frame.setVisible(true);
         }
 

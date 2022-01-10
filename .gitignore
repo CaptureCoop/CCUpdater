@@ -6,5 +6,5 @@
 /.gradle/
 /build/
 /release/*
-SnipUpdater.iml
+CCUpdater.iml
 settings.gradle

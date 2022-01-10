@@ -1,6 +1,6 @@
-# SnipUpdater
+# CCUpdater
 
-Lightweight tool used by SnipSniper to download updates
+Lightweight tool used by some of our programs (like SnipSniper) to download updates.
 
 ### Installation
 

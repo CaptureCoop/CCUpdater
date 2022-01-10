@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'net.capturecoop'
+group 'org.capturecoop'
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -10,27 +10,10 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-repositories {
-    mavenCentral()
-}
-
-test {
-    useJUnitPlatform()
-}
-
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
-}
-
 jar {
     manifest {
         attributes(
-                'Main-Class': 'net.capturecoop.snipupdater.Main'
+                'Main-Class': 'org.capturecoop.snipupdater.Main'
         )
     }
-}
-
-test {
-    useJUnitPlatform()
 }

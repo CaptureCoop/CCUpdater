@@ -1,4 +1,4 @@
-package net.capturecoop.snipupdater;
+package org.capturecoop.snipupdater;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,7 +72,7 @@ public class Main {
             int height = gd.getDisplayMode().getHeight();
             frame.setLocation(width / 2 - frame.getWidth() / 2, height / 2 - frame.getHeight() / 2);
             frame.add(progressBar);
-            frame.setIconImage(new ImageIcon(Main.class.getResource("/net/capturecoop/snipupdater/download.png")).getImage());
+            frame.setIconImage(new ImageIcon(Main.class.getResource("/org/capturecoop/snipupdater/download.png")).getImage());
             frame.setVisible(true);
         }
 

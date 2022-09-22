@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.31"
+    kotlin("jvm") version "1.7.10"
 }
 
 group = "org.capturecoop"
@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.wollinger:Zipper:v0.0.1")
+    implementation("io.wollinger:Zipper:v0.0.2")
 }
 
 tasks.withType<KotlinCompile> {

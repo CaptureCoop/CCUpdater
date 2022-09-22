@@ -1,8 +1,7 @@
 package org.capturecoop.ccupdater
 
-import io.wollinger.ZipBuilder
-import io.wollinger.ZipMethod
-import io.wollinger.Zipper
+import io.wollinger.zipper.ZipBuilder
+import io.wollinger.zipper.ZipMethod
 import java.awt.GraphicsEnvironment
 import java.io.BufferedInputStream
 import java.io.File

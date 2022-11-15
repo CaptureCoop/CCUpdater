@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.wollinger:Zipper:v0.0.2")
+    implementation("net.lingala.zip4j:zip4j:2.11.2")
 }
 
 tasks.withType<KotlinCompile> {

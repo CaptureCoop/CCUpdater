@@ -1,7 +1,6 @@
 package org.capturecoop.ccupdater
 
-import io.wollinger.zipper.ZipBuilder
-import io.wollinger.zipper.ZipMethod
+import net.lingala.zip4j.ZipFile
 import java.awt.GraphicsEnvironment
 import java.io.BufferedInputStream
 import java.io.File
@@ -11,7 +10,6 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLDecoder
 import java.nio.file.Paths
-import java.nio.file.StandardCopyOption
 import java.util.concurrent.TimeUnit
 import javax.swing.ImageIcon
 import javax.swing.JFrame
@@ -136,13 +134,8 @@ fun executeDL(frame: JFrame, progressBar: JProgressBar) {
     }
 
     if(extract) {
-        ZipBuilder().apply {
-            setMethod(ZipMethod.UNZIP)
-            addInput(path)
-            addOutput(if(!dir.isNullOrEmpty()) dir else LocationFinder.getCurrentFolder())
-            setCopyOption(StandardCopyOption.REPLACE_EXISTING)
-            build()
-        }
+        val output = if(!dir.isNullOrEmpty()) dir else LocationFinder.getCurrentFolder()
+        ZipFile(path).extractAll(output)
     }
 
     if(deleteFile) {
@@ -151,16 +144,15 @@ fun executeDL(frame: JFrame, progressBar: JProgressBar) {
     }
     frame.dispose()
 }
-class LocationFinder {
-    companion object {
-        fun getCurrentFolder(): String {
-            URLDecoder.decode(Paths.get(LocationFinder::class.java.protectionDomain.codeSource.location.toURI()).toString(), "UTF-8")?.let { ftu ->
-                File(ftu).also {
-                    return if (it.name.endsWith(".jar")) ftu.replace(it.name, ""); else ftu;
-                }
+
+object LocationFinder {
+    fun getCurrentFolder(): String {
+        URLDecoder.decode(Paths.get(LocationFinder::class.java.protectionDomain.codeSource.location.toURI()).toString(), "UTF-8")?.let { ftu ->
+            File(ftu).also {
+                return if (it.name.endsWith(".jar")) ftu.replace(it.name, "") else ftu
             }
-            throw FileNotFoundException("Couldnt find jar location!")
         }
+        throw FileNotFoundException("Couldnt find jar location!")
     }
 }
 
